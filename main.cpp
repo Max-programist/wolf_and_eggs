@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <ncurses.h>
 #include <vector>
+#include <sys/select.h>
+#include <fcntl.h>
 // //plan:
 // //1.draw
 // //2.eggs
@@ -13,48 +15,56 @@
 #define  B  6
 
 struct wolf {
-    int i;
-    int j;
-
+  int i;
+  int j;
+  
 };
 
- struct wolf position_wolf = {A - 1, B / 2};
- std::vector<std::vector<char>> create();
- void  fill(std::vector<std::vector<char>>  &arr);
- void print(const std::vector<std::vector<char>>& arr, const int* points);
- void generation_eggs(std::vector<std::vector<char>>& arr);
- void move_eggs(std::vector<std::vector<char>>& arr);
+struct wolf position_wolf = {A - 1, B / 2};
+std::vector<std::vector<char>> create();
+void  fill(std::vector<std::vector<char>>  &arr);
+void print(const std::vector<std::vector<char>>& arr, const int* points);
+void generation_eggs(std::vector<std::vector<char>>& arr);
+void move_eggs(std::vector<std::vector<char>>& arr);
 void wolf_controller(std::vector<std::vector<char>>& arr);
 bool check_eggs(std::vector<std::vector<char>>& arr, int* points);
 
- int main() {
+int main() {
+  
+  srand(time(0));
+  
+  int flags = fcntl(0, F_GETFL, 0);
+  fcntl(0, F_SETFL, flags | O_NONBLOCK);
 
-    srand(time(0));
+  // initscr();
+  // cbreak();
+  // noecho();
+  // nodelay(stdscr, TRUE);
+  // keypad(stdscr, TRUE);
 
+
+  std::vector<std::vector<char>> arr = create();
+  fill(arr);
+  int point = 0;
+  
+  
+  
+  for( ; ; ) {
+    wolf_controller(arr);
+    bool check = check_eggs(arr, &point);
+    move_eggs(arr);
+    generation_eggs(arr);
+    print(arr, &point);
+    if(check == true) {
+      break;
+    }
     
-
-    std::vector<std::vector<char>> arr = create();
-    fill(arr);
-    int point = 0;
-
-
-
-    for( ; ; ) {
-        wolf_controller(arr);
-        bool check = check_eggs(arr, &point);
-        move_eggs(arr);
-        generation_eggs(arr);
-        print(arr, &point);
-        if(check == true) {
-            break;
-        }
-
-        //sleep(1);
+    sleep(1);
          
     }
     std::cout << "Game over" << std::endl;
 
-    
+    //sendwin();
     return 0;
 }
 
@@ -163,13 +173,21 @@ bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
 }
 
 void wolf_controller(std::vector<std::vector<char>>& arr) {
-  initscr();
-  noecho();
+  fd_set set;
+  struct timeval timeout;
+  FD_ZERO(&set);
+  FD_SET(0, &set);
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 0;
+  
 
-  char c = getch();
-  addch(c);
+  int res = select(1, &set, NULL, NULL, &timeout);
+  if(res > 0) {
+    char c = getchar();
+ // if (c == ERR) return;
+  //addch(c);
   if(c == 'q') {
-    endwin();
+  //  endwin();
     exit(0);
     
   } else if(c == 'd') {
@@ -193,6 +211,6 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   }
 
   
-  endwin();
+  }  
 }
 
