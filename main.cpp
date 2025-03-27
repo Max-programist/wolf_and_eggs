@@ -28,11 +28,17 @@ void wolf_controller(std::vector<std::vector<char>>& arr);
 bool check_eggs(std::vector<std::vector<char>>& arr, int* points);
 
  int main() {
+
     srand(time(0));
+
+    
 
     std::vector<std::vector<char>> arr = create();
     fill(arr);
     int point = 0;
+
+
+
     for( ; ; ) {
         wolf_controller(arr);
         bool check = check_eggs(arr, &point);
@@ -47,7 +53,8 @@ bool check_eggs(std::vector<std::vector<char>>& arr, int* points);
          
     }
     std::cout << "Game over" << std::endl;
- 
+
+    
     return 0;
 }
 
@@ -156,10 +163,15 @@ bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
 }
 
 void wolf_controller(std::vector<std::vector<char>>& arr) {
+  initscr();
+  noecho();
 
-  char c = getchar();
+  char c = getch();
+  addch(c);
   if(c == 'q') {
+    endwin();
     exit(0);
+    
   } else if(c == 'd') {
       arr[position_wolf.i][position_wolf.j] = '.';
       position_wolf.j = 3;
@@ -181,6 +193,6 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   }
 
   
-
+  endwin();
 }
 
