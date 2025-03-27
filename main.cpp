@@ -10,7 +10,7 @@
 
 
 #define  A  15  
-#define  B  10
+#define  B  6
 
 struct wolf {
     int i;
@@ -25,75 +25,31 @@ struct wolf {
  void generation_eggs(std::vector<std::vector<char>>& arr);
  void move_eggs(std::vector<std::vector<char>>& arr);
 void wolf_controller(std::vector<std::vector<char>>& arr);
-int check_eggs(std::vector<std::vector<char>>& arr, int* points);
+bool check_eggs(std::vector<std::vector<char>>& arr, int* points);
 
  int main() {
-      srand(time(0));
+    srand(time(0));
 
-      
+    std::vector<std::vector<char>> arr = create();
+    fill(arr);
+    int point = 0;
+    for( ; ; ) {
+        wolf_controller(arr);
+        bool check = check_eggs(arr, &point);
+        move_eggs(arr);
+        generation_eggs(arr);
+        print(arr, &point);
+        if(check == true) {
+            break;
+        }
 
-
-      // unsigned int x=0, y=0;
-      // int ch;
-  
-      // initscr ();
-      // keypad (stdscr, 1);
-  
-      // do {
-      //     mvprintw(y, x, "Hello World !!!");
-      //     refresh();
-      //     ch = getch();
-      //     mvprintw(y, x, "               ");
-          
-      //     if(ch == KEY_UP) {
-      //       y--; 
-      //       y %= LINES;
-      //     } else if (ch == KEY_DOWN) {
-      //       y++;
-      //       y %= LINES;
-      //     } else if(ch == KEY_LEFT) {
-      //       x--;
-      //       x %= COLS ;
-      //     } else if(ch == KEY_RIGHT) {
-      //       x++; 
-      //       x %= COLS ;
-      //     }
-
-      // } while (ch != 'q');
-  
-      // endwin();
-
-       std::vector<std::vector<char>> arr = create();
-       fill(arr);
-       int point = 0;
-       for( ; ; ) {
-         wolf_controller(arr);
-         generation_eggs(arr);
-         move_eggs(arr);
-         print(arr, &point);
-         if(check_eggs(arr, &point) == 1) {
-          break;
-         };
-       //sleep(1);
+        //sleep(1);
          
-      }
-      std::cout << "Game over" << std::endl;
+    }
+    std::cout << "Game over" << std::endl;
  
-    
-
-
-     return 0;
+    return 0;
 }
-
-// void aaaa(int* a, int& b, int c) {
-//     if(a != NULL) {
-//         *a = *a * (-1);
-        
-//     }
-    
-//     b = b * (-1);
-//     c = c * (-1);
-// }
 
 
 std::vector<std::vector<char>> create() {
@@ -146,7 +102,7 @@ void generation_eggs(std::vector<std::vector<char>>& arr) {
   
 
 
-  if(rand() % 100 >= 0) {
+  if(rand() % 100 >= 90) {
 
     int egg = rand() % (B - 2) + 1;
     arr[1][egg] = 'o'; 
@@ -177,7 +133,7 @@ void move_eggs(std::vector<std::vector<char>>& arr) {
 
 }
 
-int check_eggs(std::vector<std::vector<char>>& arr, int* points) {
+bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
   
   for(int i = 1; i < B - 1; i++) {
     if(arr[A - 2][i] == 'o') {
@@ -188,15 +144,15 @@ int check_eggs(std::vector<std::vector<char>>& arr, int* points) {
         
       } else {
         arr[A - 2][i] = '.'; 
-        arr[A - 2][i + 1] = 'o';  
-        return 1;      
+        arr[A - 1][i] = 'o';  
+        return true;      
         
       }
 
     } 
     
   }
-  return 0;
+  return false;
 }
 
 void wolf_controller(std::vector<std::vector<char>>& arr) {
@@ -205,25 +161,26 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   if(c == 'q') {
     exit(0);
   } else if(c == 'd') {
-      if(position_wolf.j != B - 2) {
-        arr[position_wolf.i][position_wolf.j] = '.';
-        position_wolf.j += 1;
-        arr[position_wolf.i][position_wolf.j] = 'w';
-      
-    }
+      arr[position_wolf.i][position_wolf.j] = '.';
+      position_wolf.j = 3;
+      arr[position_wolf.i][position_wolf.j] = 'w';
+
   } else if(c == 'a') {
-    if(position_wolf.j != 1) {
-        arr[position_wolf.i][position_wolf.j] = '.';
-        position_wolf.j -= 1;
-        arr[position_wolf.i][position_wolf.j] = 'w';
-    }
+      arr[position_wolf.i][position_wolf.j] = '.';
+      position_wolf.j = 1;
+      arr[position_wolf.i][position_wolf.j] = 'w';
+ 
+  } else if(c == 's') {
+      arr[position_wolf.i][position_wolf.j] = '.';
+      position_wolf.j = 2;
+      arr[position_wolf.i][position_wolf.j] = 'w';
+  } else if(c == 'f') {
+      arr[position_wolf.i][position_wolf.j] = '.';
+      position_wolf.j = 4;
+      arr[position_wolf.i][position_wolf.j] = 'w';
   }
+
   
 
 }
 
-//void move_wolf(std::vector<std::vector<char>>& arr) {
-  
-
-
-//}
