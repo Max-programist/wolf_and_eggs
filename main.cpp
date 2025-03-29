@@ -36,7 +36,7 @@ int main() {
   int flags = fcntl(0, F_GETFL, 0);
   fcntl(0, F_SETFL, flags | O_NONBLOCK);
 
-  //system("stty raw -echo");
+  system("stty raw -echo");
 
   std::vector<std::vector<char>> arr = create();
   fill(arr);
@@ -49,17 +49,20 @@ int main() {
     bool check = check_eggs(arr, &point);
     move_eggs(arr);
     generation_eggs(arr);
+    std::cout.flush();
     print(arr, &point);
     if(check == true) {
       break;
     }
     
     sleep(1);
-         
-    }
-    std::cout << "Game over" << std::endl;
+    
+  }
+  std::cout << "Game over" << std::endl;
+  system("stty sane");
 
-    //system("stty sane");
+    
+    
     return 0;
 }
 
@@ -97,12 +100,13 @@ std::vector<std::vector<char>> create() {
 
 
 void print(const std::vector<std::vector<char>>& arr, const int* points) {
-  std::cout << "Points:" << *points << std::endl;
+  std::cout << "\033[2J\033[1;1H";
+  std::cout << "Points:" << *points << "\r" << std::endl;
   for(int i = 0; i < A; i++) {
     for(int j = 0; j < B; j++) {
       std::cout << arr[i][j] << " ";
     }
-    std::cout << std::endl;
+    std::cout << "\r\n";
   }
 }
 
@@ -180,6 +184,7 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   if(res > 0) {
     char c = getchar();
   if(c == 'q') {
+    system("stty sane");
     exit(0);
     
   } else if(c == 'd') {
