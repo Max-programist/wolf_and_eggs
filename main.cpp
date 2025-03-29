@@ -36,12 +36,7 @@ int main() {
   int flags = fcntl(0, F_GETFL, 0);
   fcntl(0, F_SETFL, flags | O_NONBLOCK);
 
-  // initscr();
-  // cbreak();
-  // noecho();
-  // nodelay(stdscr, TRUE);
-  // keypad(stdscr, TRUE);
-
+  //system("stty raw -echo");
 
   std::vector<std::vector<char>> arr = create();
   fill(arr);
@@ -64,7 +59,7 @@ int main() {
     }
     std::cout << "Game over" << std::endl;
 
-    //sendwin();
+    //system("stty sane");
     return 0;
 }
 
@@ -184,10 +179,7 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   int res = select(1, &set, NULL, NULL, &timeout);
   if(res > 0) {
     char c = getchar();
- // if (c == ERR) return;
-  //addch(c);
   if(c == 'q') {
-  //  endwin();
     exit(0);
     
   } else if(c == 'd') {
