@@ -4,6 +4,8 @@
 #include <vector>
 #include <sys/select.h>
 #include <fcntl.h>
+#include <thread>
+#include <chrono>
 // //plan:
 // //1.draw
 // //2.eggs
@@ -17,10 +19,10 @@
 struct wolf {
   int i;
   int j;
-  
+  int speed;
 };
 
-struct wolf position_wolf = {A - 1, B / 2};
+struct wolf position_wolf = {A - 1, B / 2, 1000000000};
 std::vector<std::vector<char>> create();
 void  fill(std::vector<std::vector<char>>  &arr);
 void print(const std::vector<std::vector<char>>& arr, const int* points);
@@ -55,7 +57,7 @@ int main() {
       break;
     }
     
-    sleep(1);
+    std::this_thread::sleep_for(std::chrono::nanoseconds(position_wolf.speed));
     
   }
   std::cout << "Game over" << std::endl;
@@ -118,7 +120,7 @@ void generation_eggs(std::vector<std::vector<char>>& arr) {
   
 
 
-  if(rand() % 100 >= 90) {
+  if(rand() % 100 >= 50) {
 
     int egg = rand() % (B - 2) + 1;
     arr[1][egg] = 'o'; 
@@ -157,7 +159,6 @@ bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
       if(position_wolf.j == i) {
         (*points)++;
         arr[A - 2][i] = '.';
-        
       } else {
         arr[A - 2][i] = '.'; 
         arr[A - 1][i] = 'o';  
