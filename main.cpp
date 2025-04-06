@@ -6,12 +6,6 @@
 #include <fcntl.h>
 #include <thread>
 #include <chrono>
-// //plan:
-// //1.draw
-// //2.eggs
-// //3.wolf
-
-
 
 #define  A  15  
 #define  B  6
@@ -19,7 +13,7 @@
 struct wolf {
   int i;
   int j;
-  int speed;
+  uint speed;
 };
 
 struct wolf position_wolf = {A - 1, B / 2, 1000000000};
@@ -30,6 +24,8 @@ void generation_eggs(std::vector<std::vector<char>>& arr);
 void move_eggs(std::vector<std::vector<char>>& arr);
 void wolf_controller(std::vector<std::vector<char>>& arr);
 bool check_eggs(std::vector<std::vector<char>>& arr, int* points);
+void speed(const uint& points);
+
 
 int main() {
   
@@ -48,6 +44,7 @@ int main() {
   
   for( ; ; ) {
     wolf_controller(arr);
+    speed(point);
     bool check = check_eggs(arr, &point);
     move_eggs(arr);
     generation_eggs(arr);
@@ -189,3 +186,15 @@ void wolf_controller(std::vector<std::vector<char>>& arr) {
   }  
 }
 
+void speed(const uint& points) {
+
+                                                //4 200 000 000 * 1.1 = 4 620 000 000 
+  if((points % 5 == 0) && (position_wolf.speed <  4294967295 - position_wolf.speed * 0.1)) {
+    position_wolf.speed *= 1.1;
+    //−2 147 483 648-----------------------------------0--------------------------------------------->2 147 483 648
+    //0-------------------------------------------------------------------------------->  4 294 967 295
+  }
+
+
+
+}
