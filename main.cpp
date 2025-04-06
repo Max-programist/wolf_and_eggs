@@ -51,7 +51,6 @@ int main() {
     bool check = check_eggs(arr, &point);
     move_eggs(arr);
     generation_eggs(arr);
-    std::cout.flush();
     print(arr, &point);
     if(check == true) {
       break;
@@ -117,38 +116,26 @@ void print(const std::vector<std::vector<char>>& arr, const int* points) {
 
 void generation_eggs(std::vector<std::vector<char>>& arr) {
 
-  
-
-
   if(rand() % 100 >= 50) {
 
     int egg = rand() % (B - 2) + 1;
     arr[1][egg] = 'o'; 
-
   }
-
-  
 
 }
 
 
 
 void move_eggs(std::vector<std::vector<char>>& arr) {
-
-
   
   for(int i = A - 2; i >= 1; i--) {
-    for(int j = 1; j < B - 1; j++) {
-   
+    for(int j = 1; j < B - 1; j++) {   
       if(arr[i][j] == 'o') {
         arr[i][j] = '.';
         arr[i + 1][j] = 'o';
       }
     }
   }
-
-
-
 }
 
 bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
@@ -162,51 +149,41 @@ bool check_eggs(std::vector<std::vector<char>>& arr, int* points) {
       } else {
         arr[A - 2][i] = '.'; 
         arr[A - 1][i] = 'o';  
-        return true;      
-        
+        return true;           
       }
-
     } 
-    
+  
   }
   return false;
 }
 
 void wolf_controller(std::vector<std::vector<char>>& arr) {
-  fd_set set;
-  struct timeval timeout;
-  FD_ZERO(&set);
-  FD_SET(0, &set);
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 0;
-  
 
-  int res = select(1, &set, NULL, NULL, &timeout);
-  if(res > 0) {
-    char c = getchar();
-  if(c == 'q') {
-    system("stty sane");
-    exit(0);
-    
-  } else if(c == 'd') {
+  char c = getchar();
+  if(c != EOF) {
+    if(c == 'q') {
+      system("stty sane");
+      exit(0);
+
+    } else if(c == 'd') {
       arr[position_wolf.i][position_wolf.j] = '.';
       position_wolf.j = 3;
       arr[position_wolf.i][position_wolf.j] = 'w';
 
-  } else if(c == 'a') {
+    } else if(c == 'a') {
       arr[position_wolf.i][position_wolf.j] = '.';
       position_wolf.j = 1;
       arr[position_wolf.i][position_wolf.j] = 'w';
  
-  } else if(c == 's') {
+    } else if(c == 's') {
       arr[position_wolf.i][position_wolf.j] = '.';
       position_wolf.j = 2;
       arr[position_wolf.i][position_wolf.j] = 'w';
-  } else if(c == 'f') {
+    } else if(c == 'f') {
       arr[position_wolf.i][position_wolf.j] = '.';
       position_wolf.j = 4;
       arr[position_wolf.i][position_wolf.j] = 'w';
-  }
+    }
 
   
   }  
